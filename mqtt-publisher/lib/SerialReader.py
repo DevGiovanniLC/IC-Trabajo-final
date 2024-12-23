@@ -31,10 +31,12 @@ class SerialReader:
         except serial.SerialException as e:
             print(f"Error al acceder al puerto {port}: {e}")
             self.exit = True
+            return Exception(f"Error al acceder al puerto {port}: {e}")
         except Exception as e:
             print(f"Error inesperado: {e}")
             self.exit = True
-            
+            return Exception(f"Error inesperado: {e}")
+
 
     def get_queue(self):
         return self.__serial_buffer
