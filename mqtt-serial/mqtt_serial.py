@@ -5,7 +5,7 @@ from lib.SerialClient import SerialClient
 from lib.MqttClient import MqttClient
 
 if __name__ == "__main__":
-    host = "broker.hivemq.com"
+    host = "brokermqtt.duckdns.org"
     host_port = 1883
     arduino_port = "COM3"
     parking_topic = "PARKING-SPACE"

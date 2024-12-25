@@ -15,7 +15,7 @@ class SerialClient:
 
     
     def write(self, data):
-        print(f"Escribiendo en serial: {format(data, "x")}\n")
+        print(f"Escribiendo en serial: 0x{format(data[0], "x")}, 0x{format(data[1], "x")}\n")
         self.__arduino.write(data)
     
     def on_read(self, callback: callable = None):
