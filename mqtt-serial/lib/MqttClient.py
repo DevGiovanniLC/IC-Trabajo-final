@@ -1,6 +1,7 @@
 # pip install paho-mqtt
 import paho.mqtt.client as mqtt
 import time
+import json
 
 
 class MqttClient:
@@ -29,10 +30,50 @@ class MqttClient:
             print("Elemento no encontrado")
     
     def __on_message(self, client, userdata, msg):
-        print(f"Mensaje recibido desde MQTT: {msg.payload}")
-        message = msg.payload.decode("utf-8")
-        message = int(message)
-        if self.__callback is not None: self.__callback(message)
+        payload = msg.payload.decode("utf-8")
+        data = json.loads(payload)
+        print(f"Mensaje recibido desde MQTT: {data}")
+        
+        firstByte = data.get("device")
+        command = data.get("command")
+        value = data.get("value")
+        secondByte = self.__command_to_byte(command, value)
+
+        
+        if self.__callback is not None and secondByte is not None: 
+            self.__callback(bytearray([firstByte, secondByte]))
+            
+    def __command_to_byte(self, command, value):
+        secondByte = None
+        match command:
+            case "period":
+                minutes = value.get("minutes")
+                seconds = value.get("seconds")
+                notValidMinutes = minutes == None or type(minutes) != int or minutes > 8 or minutes < 0
+                notValidSeconds = seconds == None or type(seconds) != int or seconds > 50 or seconds < 0
+                if notValidMinutes:
+                    print(f"Valores incorrectos para minutos: {minutes}")
+                    return
+                if notValidSeconds:
+                    print(f"Valores incorrectos para segundos: {seconds}")
+                    return
+                secondByte = (1 << 7) + (int(seconds / 10) << 4) + minutes
+
+            case "distance":
+                meters = value.get("meters")
+                decimeters = value.get("decimeters")
+                notValidMeters = meters == None or type(meters) != int or meters > 7 or meters < 0
+                notValidDecimeters = decimeters == None or type(decimeters) != int or decimeters > 9 or decimeters < 0
+                if notValidMeters:
+                    print(f"Valores incorrectos para metros: {meters}")
+                    return
+                if notValidDecimeters:
+                    print(f"Valores incorrectos para decimetros: {decimeters}")
+                    return
+                secondByte = (meters << 4) + decimeters
+            case _:
+                print(f"Comando no reconocido: {command}")
+        return secondByte
     
     def on_read(self, callback: callable = None):
         self.__callback = callback
