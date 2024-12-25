@@ -1,7 +1,7 @@
 #pip install pyserial
 import serial
 import time
-
+import json
 
 class SerialClient:
     
@@ -31,11 +31,17 @@ class SerialClient:
 
                 while True:
                     if self.exit: break
-                    if arduino.in_waiting > 0:  # Comprueba si hay datos disponibles
-                        data = arduino.read(1)
-                        data = int.from_bytes(data, byteorder='big') 
-                        print(f"Dato leido del serial: {format(int(data), "x")}")
-                        if callback is not None: callback(data)
+                    if arduino.in_waiting > 1:  # Comprueba si hay datos disponibles
+                        slot = arduino.read(1)
+                        occupied = arduino.read(1)
+                        slot = int.from_bytes(slot, byteorder='big') 
+                        occupied = int.from_bytes(occupied, byteorder='big')
+                        print(f"Dato leido del serial: {format(int(slot), "x")}")
+                        jsonContent = {
+                            "slot": slot,
+                            "occupied": occupied 
+                        }
+                        if callback is not None: callback(json.dumps(jsonContent))
                     else:
                         pass
                         #time.sleep(0.01)
