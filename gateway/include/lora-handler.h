@@ -3,14 +3,23 @@
 
 #include <Arduino.h>
 
-class LoraHandler
-{
+struct LoraConfig {
+    byte deviceAddress;
+    byte bandwidthIndex;
+    byte spreadingFactor;
+    byte codingRate;
+    byte transmitPower;
+};
+
+class LoraHandler{
 public:
-    static void begin(byte address);
-    static void onReceive(void (*callback)(byte fromAdress, byte content));
+    static void begin(LoraConfig config);
+    static void sendMessage(byte toAddress, byte content);
+    static void onReceive(void (*callback)(byte fromAddress, byte content));
 private:
     static void receiveMessage(int packetSize);
-    static void (*receiveCallback)(byte fromAdress, byte content);
+    static void (*receiveCallback)(byte fromAddress, byte content);
+    static void finishedSending();
     static byte localAddress;
 };
 
