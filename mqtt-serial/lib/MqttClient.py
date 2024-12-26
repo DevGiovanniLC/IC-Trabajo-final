@@ -41,7 +41,8 @@ class MqttClient:
 
         
         if self.__callback is not None and secondByte is not None: 
-            self.__callback(bytearray([firstByte, secondByte]))
+            self.__callback(firstByte)
+            self.__callback(secondByte)
             
     def __command_to_byte(self, command, value):
         secondByte = None

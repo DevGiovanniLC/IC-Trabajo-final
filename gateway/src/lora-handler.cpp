@@ -11,6 +11,10 @@ volatile bool isSending = false;
 void LoraHandler::begin(LoraConfig config)
 {
     localAddress = config.deviceAddress;
+    if (!LoRa.begin(868E6)) {
+        digitalWrite(LED_BUILTIN, HIGH);
+        while (true);
+    }
     LoRa.setSignalBandwidth(long(bandwidth_kHz[config.bandwidthIndex]));
     LoRa.setSpreadingFactor(config.spreadingFactor);
     LoRa.setCodingRate4(config.codingRate);
@@ -54,4 +58,5 @@ void LoraHandler::onReceive(void (*callback)(byte fromAddress, byte content))
 void LoraHandler::finishedSending()
 {
     isSending = false;
+    LoRa.receive();
 }

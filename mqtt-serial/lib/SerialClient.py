@@ -15,8 +15,8 @@ class SerialClient:
 
     
     def write(self, data):
-        print(f"Escribiendo en serial: 0x{format(data[0], "x")}, 0x{format(data[1], "x")}\n")
-        self.__arduino.write(data)
+        print(f"Escribiendo en serial: 0x{format(data, "x")}\n")
+        self.__arduino.write(data.to_bytes(1, 'big'))
     
     def on_read(self, callback: callable = None):
         self.__read_arduino_serial(self.__arduino, callback)
@@ -36,7 +36,8 @@ class SerialClient:
                         occupied = arduino.read(1)
                         slot = int.from_bytes(slot, byteorder='big') 
                         occupied = int.from_bytes(occupied, byteorder='big')
-                        print(f"Dato leido del serial: {format(int(slot), "x")}")
+                        print(f"\nDato leido del dispositivo: 0x{format(int(slot), "x")}")
+                        print(f"Ocupado: {occupied}")
                         jsonContent = {
                             "slot": slot,
                             "occupied": occupied 

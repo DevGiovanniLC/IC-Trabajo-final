@@ -11,8 +11,11 @@ void USBHandler::sendMessage(byte fromAdress, byte content)
 
 void USBHandler::begin(int baudRate)
 {
-    SerialUSB.begin(baudRate);
-    while (!SerialUSB);
+    // SerialUSB.begin(baudRate);
+    // while (!SerialUSB) {
+    //     digitalWrite(LED_BUILTIN, HIGH);
+    // }
+    // digitalWrite(LED_BUILTIN, LOW);
 }
 
 void USBHandler::onReceive(void (*callback)(byte toAddress, byte content))
