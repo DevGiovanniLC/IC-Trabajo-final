@@ -7,7 +7,7 @@ from lib.MqttClient import MqttClient
 if __name__ == "__main__":
     host = "brokermqtt.duckdns.org"
     host_port = 1883
-    arduino_port = "COM6"
+    arduino_port = "COM3"
     parking_topic = "PARKING-SPACE"
     configure_topic = "PARKING-CONFIGURE"
     

@@ -17,7 +17,6 @@ void setup()
     while (!Serial);
     pinMode(LED_BUILTIN, OUTPUT);
     init_PMIC();
-    USBHandler::begin(USB_BAUD_RATE);
     LoraConfig loraConfig = {
         .deviceAddress = LORA_ADDRESS,
         .bandwidthIndex = LORA_BANDWIDTH_INDEX,
