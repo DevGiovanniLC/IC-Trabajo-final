@@ -39,7 +39,7 @@ class MQTTClient {
     }
 
     subscribe() {
-        this.client.subscribe(options.topic, {
+        this.client.subscribe(options.parkingTopic, {
             qos: 1, 
             onSuccess: this.onSubscribe
         })
@@ -51,7 +51,7 @@ class MQTTClient {
 
     publish(message) {
         this.client.publish(
-            options.topic,
+            options.configureTopic,
             message,
             { qos: 1 }
         )
