@@ -1,5 +1,4 @@
-// Including the MQTT.js library
-import pahoMqtt from "../include/paho-mqtt"
+const { Client } = require('paho-mqtt');
 
 /* Definition of MQTTClient class:
   1. Constructor: Initializes the MQTT client with the given options
@@ -13,9 +12,10 @@ import pahoMqtt from "../include/paho-mqtt"
 */
 class MQTTClient {
     constructor(options) {
-        this.client = new pahoMqtt.Client(
+        this.client = new Client(
             options.host,
             options.port,
+            options.path,
             options.clientId
         )
     }
@@ -61,3 +61,5 @@ class MQTTClient {
         console.log("onMessageArrived:" + message.payloadString);
     }
 }
+
+module.exports = MQTTClient;
