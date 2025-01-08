@@ -1,4 +1,4 @@
-const MQTTClient = require('./lib/mqttclient');
+const MQTTClient = require('../lib/mqttclient');
 
 const options = {
     host: "localhost",
