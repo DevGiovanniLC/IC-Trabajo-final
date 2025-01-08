@@ -1,4 +1,4 @@
-const { Client } = require('paho-mqtt');
+const { Client, Message } = require('paho-mqtt');
 
 /* Definition of MQTTClient class:
   1. Constructor: Initializes the MQTT client with the given options
@@ -11,54 +11,62 @@ const { Client } = require('paho-mqtt');
   8. OnMessageArrived: Logs the message received from the broker
 */
 class MQTTClient {
-    constructor(options) {
+    constructor(options, callback) {
+        this.options = options
+        this.callback = callback
+
         this.client = new Client(
             options.host,
             options.port,
-            options.path,
+            options.path, 
             options.clientId
         )
+        this.client.onMessageArrived = this.onMessageArrived
+        this.client.onConnectionLost = this.onConnectionLost
     }
 
-    connect() {
+    connect = () => {
         this.client.connect({
             onSuccess: this.onConnect,
             reconnect: true
         })
     }
 
-    onConnect() {
+    onConnect = () => {
         console.log("Connected to MQTT broker")
         this.subscribe()
     }
 
-    onConnectionLost(responseObject) {
+    onConnectionLost = (responseObject) => {
         if (responseObject.errorCode !== 0) {
             console.log("onConnectionLost:" + responseObject.errorMessage);
         }
     }
 
-    subscribe() {
-        this.client.subscribe(options.parkingTopic, {
+    subscribe = () => {
+        this.client.subscribe(this.options.parkingTopic, {
             qos: 1, 
             onSuccess: this.onSubscribe
         })
     }
 
-    onSubscribe() {
+    onSubscribe = () => {
         console.log("Subscribed to topic")
     }
 
-    publish(message) {
+    publish = (data) => {
         this.client.publish(
-            options.configureTopic,
-            message,
-            { qos: 1 }
+            this.options.configureTopic,
+            String(JSON.stringify(data)),
         )
     }
 
-    onMessageArrived(message) {
+    onMessageArrived = (message) => {
         console.log("onMessageArrived:" + message.payloadString);
+        this.callback({
+            topic: message.destinationName,
+            payload: message.payloadString
+        })
     }
 }
 
