@@ -5,7 +5,7 @@ const webSocket = io("http://localhost:3000")
 const devices = [
     new Device(147, false, {meters: 2, decimeters: 5}, {minutes: 1, seconds: 0}),
     new Device(148, false, {meters: 2, decimeters: 5}, {minutes: 1, seconds: 0}),
-    new Device(149, false, {meters: 2, decimeters: 5}, {minutes: 1, seconds: 0}),
+    new Device(149, false, {meters: 2, decimeters: 5}, {minutes: 1, seconds: 0})
 ]
 
 let checkInDevices = (address) => {
@@ -53,23 +53,25 @@ let buildDeviceUi = (device) => {
         </div>
         <div class = "device-distance-update">
             <p> Change Distance: </p>
+            <label for = "device-distance-meters-select"> Meters: </label>
             <select class = "device-distance-meters-select">
                 <option value = "0"> 0 </option>
                 <option value = "1"> 1 </option>
-                <option value = "2"> 2 </option>
+                <option value = "2" selected = "true"> 2 </option>
                 <option value = "3"> 3 </option>
                 <option value = "4"> 4 </option>
                 <option value = "5"> 5 </option>
                 <option value = "6"> 6 </option>
                 <option value = "7"> 7 </option>
             </select>
+            <label for = "device-distance-decimeters-select"> Decimeters: </label>
             <select class = "device-distance-decimeters-select">
                 <option value = "0"> 0 </option>
                 <option value = "1"> 1 </option>
                 <option value = "2"> 2 </option>
                 <option value = "3"> 3 </option>
                 <option value = "4"> 4 </option>
-                <option value = "5"> 5 </option>
+                <option value = "5" selected = "true"> 5 </option>
                 <option value = "6"> 6 </option>
                 <option value = "7"> 7 </option>
                 <option value = "8"> 8 </option>
@@ -78,9 +80,10 @@ let buildDeviceUi = (device) => {
         </div>
         <div class = "device-frequency-update">
             <p> Change Frequency: </p>
+            <label for = "device-frequency-minutes-select"> Minutes: </label>
             <select class = "device-frequency-minutes-select">
                 <option value = "0"> 0 </option>
-                <option value = "1"> 1 </option>
+                <option value = "1" selected = "true"> 1 </option>
                 <option value = "2"> 2 </option>
                 <option value = "3"> 3 </option>
                 <option value = "4"> 4 </option>
@@ -89,6 +92,7 @@ let buildDeviceUi = (device) => {
                 <option value = "7"> 7 </option>
                 <option value = "8"> 8 </option>
             </select>
+            <label for = "device-frequency-seconds-select"> Seconds: </label>
             <select class = "device-frequency-seconds-select">
                 <option value = "0"> 0 </option>
                 <option value = "10"> 10 </option>
