@@ -31,7 +31,8 @@ const client = new MQTTClient(
     */
 
     (data) => {
-        socket.emit('information', data)
+        let parsed = JSON.parse(data.payload)
+        socket.emit('information', {address: parsed.device, status: parsed.ocuppied})
     }
 );
 

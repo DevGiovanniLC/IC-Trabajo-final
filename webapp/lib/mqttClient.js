@@ -1,4 +1,4 @@
-const { Client, Message } = require('paho-mqtt');
+const { Client } = require('paho-mqtt');
 
 /* Definition of MQTTClient class:
   1. Constructor: Initializes the MQTT client with the given options

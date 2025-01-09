@@ -1,0 +1,27 @@
+body {
+    background-color: #f3f8f8;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell;
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#main-window {
+    width: 95%;
+    height: 95%;
+    border-radius: 15px;
+    border: 1px solid #3e5a60;
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+}
+
+#title {
+    color: #1e2a2e;
+    font-size: 2em;
+    font-weight: lighter;
+}
