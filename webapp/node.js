@@ -13,12 +13,12 @@ const socket = new Server(io, {
 );
 
 const options = {
-    host: "localhost",
+    host: "brokermqtt.duckdns.org",
     port: 8000,
     path: "/mqtt",
     clientId: "mqttjs_" + Math.random().toString(16).substr(2, 8),
-    parkingTopic: "parking",
-    configureTopic: "configure"
+    parkingTopic: "PARKING-SPACE",
+    configureTopic: "PARKING-CONFIGURE"
 }
 
 const client = new MQTTClient(
