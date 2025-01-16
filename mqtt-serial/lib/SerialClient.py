@@ -39,7 +39,7 @@ class SerialClient:
                         print(f"\nDato leido del dispositivo: 0x{format(int(slot), "x")}")
                         print(f"Ocupado: {occupied}")
                         jsonContent = {
-                            "slot": slot,
+                            "device": slot,
                             "occupied": occupied 
                         }
                         if callback is not None: callback(json.dumps(jsonContent))
