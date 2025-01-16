@@ -3,9 +3,9 @@ const webSocket = io("http://localhost:3000")
 
 // Initial device configuration = no detection, 2.5 meters, 60 seconds
 const devices = [
-    new Device(147, false, {meters: 2, decimeters: 5}, {minutes: 1, seconds: 0}),
-    new Device(148, false, {meters: 2, decimeters: 5}, {minutes: 1, seconds: 0}),
-    new Device(149, false, {meters: 2, decimeters: 5}, {minutes: 1, seconds: 0})
+    new Device(130, false, {meters: 2, decimeters: 5}, {minutes: 1, seconds: 0}),
+    new Device(131, false, {meters: 2, decimeters: 5}, {minutes: 1, seconds: 0}),
+    new Device(147, false, {meters: 2, decimeters: 5}, {minutes: 1, seconds: 0})
 ]
 
 let checkInDevices = (address) => {
