@@ -1,0 +1,26 @@
+{
+  "name": "webapp",
+  "version": "1.0.0",
+  "description": "Web MQTT and Socket Based Application To Tackle Distance Recognition In Parking Slots",
+  "main": "node.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DevGiovanniLC/IC-Trabajo-final.git"
+  },
+  "author": "adriancardona",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DevGiovanniLC/IC-Trabajo-final/issues"
+  },
+  "homepage": "https://github.com/DevGiovanniLC/IC-Trabajo-final#readme",
+  "dependencies": {
+    "paho-mqtt": "^1.1.0",
+    "socket.io": "^4.8.1"
+  }
+}
