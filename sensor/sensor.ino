@@ -5,7 +5,7 @@
 
 #define LORA_LOCAL_ADDRESS 0x93
 #define LORA_GATEWAY_ADDRESS 0x92
-#define LORA_BANDWIDTH_INDEX 6
+#define LORA_BANDWIDTH_INDEX 7
 #define LORA_SPREADING_FACTOR 10
 #define LORA_CODING_RATE 5
 #define LORA_TRANSMIT_POWER 2
@@ -16,6 +16,8 @@
 #define REAL_RANGING_MODE_CM byte(81)
 #define RANGE_HIGH_BYTE byte(2)
 #define RANGE_LOW_BYTE byte(3)
+
+#define TX_LAPSE_MS 5000
 
 double bandwidth_kHz[10] = {7.8E3, 10.4E3, 15.6E3, 20.8E3, 31.25E3,
                             41.7E3, 62.5E3, 125E3, 250E3, 500E3 };
@@ -28,12 +30,20 @@ struct LoraConfig {
     byte transmitPower;
 };
 
-long lastMillis = 0;
+long lastMillis = -55000;
 
 volatile bool isSending = false;
 
-volatile int detectionDistance_dm = 10;
-volatile int frequency = 5;
+volatile int detectionDistance_dm = 25;
+volatile int frequency = 60;
+
+volatile uint32_t TxTime_ms;
+volatile uint32_t txInterval_ms = TX_LAPSE_MS;
+volatile uint32_t lastSendTime_ms = 0;
+uint32_t tx_begin_ms;
+
+byte lastStatus;
+byte status = 2;
 
 
 void setup() 
@@ -60,14 +70,18 @@ void setup()
 
 void loop()
 {
-  if (millis() - lastMillis >= (frequency * 1000)) {
+  if (millis() - lastMillis >= (frequency * 1000) && canSendMessage()) {
     SerialUSB.print("Frecuencia: ");
     SerialUSB.println(frequency);
     SerialUSB.print("Distancia de deteccion: ");
-    SerialUSB.println(detectionDistance_dm);
+    SerialUSB.print(detectionDistance_dm);
     SerialUSB.println("");
-
-    sendMessage(getStatus());
+    lastStatus = status;
+    status = getStatus();
+    if (status != lastStatus) {
+        tx_begin_ms = millis();
+      sendMessage(status);
+    }
     lastMillis = millis();
   }
 }
@@ -126,7 +140,36 @@ void receiveMessage(int packetSize)
 void finishedSending()
 {
   isSending = false;
+  TxTime_ms = getTransmissionTime(tx_begin_ms);
+  adjustTxInterval(tx_begin_ms, TxTime_ms);
   LoRa.receive();
+}
+
+bool canSendMessage() {
+   return millis() - lastSendTime_ms > txInterval_ms && !isSending;
+}
+
+uint32_t getTransmissionTime(uint32_t tx_begin_ms) {
+  TxTime_ms = millis() - tx_begin_ms;
+  Serial.print("----> TX completed in ");
+  Serial.print(TxTime_ms);
+  Serial.println(" msecs");
+  return TxTime_ms;
+}
+
+void adjustTxInterval(uint32_t tx_begin_ms, uint32_t TxTime_ms) {
+  uint32_t lapse_ms = tx_begin_ms - lastSendTime_ms;
+  lastSendTime_ms = tx_begin_ms;
+  float duty_cycle = (100.0f * TxTime_ms) / lapse_ms;
+
+  Serial.print("Duty cycle: ");
+  Serial.print(duty_cycle, 1);
+  Serial.println(" %\n");
+
+  // Solo si el ciclo de trabajo es superior al 1% lo ajustamos
+  if (duty_cycle > 1.0f) {
+    txInterval_ms = TxTime_ms * 100;
+  }
 }
 
 void proccessMessage(byte content)
@@ -134,9 +177,6 @@ void proccessMessage(byte content)
   int bit0 = (content & 0x80) >> 7;
   int unit1 = (content & 0x70) >> 4;
   int unit2 = content & 0x0F;
-  SerialUSB.println(bit0);
-  SerialUSB.println(unit1);
-  SerialUSB.println(unit2);
   
   switch(bit0)
   {
